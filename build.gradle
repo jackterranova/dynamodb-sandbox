@@ -1,0 +1,38 @@
+plugins {
+    // Apply the groovy plugin to add support for Groovy
+    id 'groovy'
+
+    // Apply the application plugin to add support for building an application
+    id 'application'
+}
+
+// Define the main class for the application
+mainClassName = 'DynamoDBDemo'
+
+dependencies {
+    // Use the latest Groovy version for building this library
+    compile 'org.codehaus.groovy:groovy-all:2.4.13'
+
+    compile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.579'
+
+    // Use the awesome Spock testing and specification framework
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+run {
+    doFirst {
+        println("starting docker")
+        println("docker run --name ddb-by-gradle -d -p 8000:8000 amazon/dynamodb-local".execute().text)
+    }
+
+    doLast {
+        "docker stop ddb-by-gradle".execute()
+    }
+}
